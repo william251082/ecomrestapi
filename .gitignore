@@ -115,3 +115,4 @@ ecompy_api/__pycache__/models.cpython-36.pyc
 /env
 /venv
 ./db.sqlite3
+.vscode
