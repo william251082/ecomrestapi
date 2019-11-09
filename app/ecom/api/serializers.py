@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from app.ecom.models import Owner, Product
+from ecom.models import Owner, Product
 
 
 class ProductSerializer(serializers.Serializer):
@@ -10,7 +10,7 @@ class ProductSerializer(serializers.Serializer):
     description = serializers.CharField()
     body = serializers.CharField()
     location = serializers.CharField()
-    publication_date = serializers.DateField()
+    release_date = serializers.DateField()
     active = serializers.BooleanField()
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
@@ -25,7 +25,7 @@ class ProductSerializer(serializers.Serializer):
         instance.description = validated_data.get('description', instance.description)
         instance.body = validated_data.get('body', instance.body)
         instance.location = validated_data.get('location', instance.location)
-        instance.publication_date = validated_data.get('publication_data', instance.publication_date)
+        instance.release_date = validated_data.get('release_date', instance.release_date)
         instance.active = validated_data.get('active', instance.active)
         instance.save()
         return instance
