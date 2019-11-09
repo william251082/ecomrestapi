@@ -5,7 +5,7 @@ from ecom.models import Owner, Product
 
 class ProductSerializer(serializers.Serializer):
     id = serializers.IntegerField(read_only=True)
-    owner = serializers.CharField()
+    # owner = serializers.CharField()
     name = serializers.CharField()
     description = serializers.CharField()
     body = serializers.CharField()
@@ -20,8 +20,8 @@ class ProductSerializer(serializers.Serializer):
         return Product.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
-        instance.owner = validated_data.get('owner', instance.author)
-        instance.name = validated_data.get('name', instance.title)
+        # instance.owner = validated_data.get('owner', instance.owner)
+        instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.body = validated_data.get('body', instance.body)
         instance.location = validated_data.get('location', instance.location)
@@ -31,26 +31,26 @@ class ProductSerializer(serializers.Serializer):
         return instance
 
     def validate(self, data):
-        """ check that description and title are different
+        """ check that description and name are different
         https://www.django-rest-framework.org/api-guide/serializers/#object-level-validation
         """
-        if data["title"] == data["description"]:
-            raise serializers.ValidationError("Title and Description must be different from one another!")
+        if data["name"] == data["description"]:
+            raise serializers.ValidationError("Name and Description must be different from one another!")
         return data
 
-    def validate_title(self, value):
-        """ check that title is at least 60 chars long
+    def validate_name(self, value):
+        """ check that name is at least 6 chars long
         https://www.django-rest-framework.org/api-guide/serializers/#field-level-validation
         """
-        if len(value) < 60:
-            raise serializers.ValidationError("The title has to be at least 60 chars long!")
+        if len(value) < 6:
+            raise serializers.ValidationError("The name has to be at least 6 chars long!")
         return value
 
 
 class OwnerSerializer(serializers.ModelSerializer):
     products = serializers.HyperlinkedRelatedField(many=True,
                                                    read_only=True,
-                                                   view_name="article-detail")
+                                                   view_name="product-detail")
 
     class Meta:
         model = Owner
