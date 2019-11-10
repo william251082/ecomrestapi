@@ -93,7 +93,7 @@ class GetSingleProductTest(TestCase):
         self.assertEqual(response.data, serializer.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-    def test_get_invalid_single_puppy(self):
+    def test_get_invalid_single_product(self):
         response = client.get(
             reverse('product_detail', kwargs={'pk': 30}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -128,7 +128,7 @@ class CreateNewProductTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
-    def test_create_invalid_puppy(self):
+    def test_create_invalid_product(self):
         response = client.post(
             reverse('get_post_products'),
             data=json.dumps(self.invalid_payload),
@@ -136,3 +136,95 @@ class CreateNewProductTest(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
+
+class UpdateSingleProductTest(TestCase):
+    """ Test module for updating an existing product record """
+
+    def setUp(self):
+        self.casper = Product.objects.create(
+            name="casper",
+            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            body="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            location="Amsterdam",
+            release_date="2019-11-18",
+            active=True,
+            created_at="2019-11-09T06:37:22.437040Z",
+            updated_at="2019-11-10T06:32:22.540832Z"
+        )
+        self.muffin = Product.objects.create(
+            name="muffin",
+            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            body="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            location="Amsterdam",
+            release_date="2019-11-18",
+            active=True,
+            created_at="2019-11-09T06:37:22.437040Z",
+            updated_at="2019-11-10T06:32:22.540832Z"
+        )
+        self.valid_payload = {
+            "name": "ProductDatum",
+            "description": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            "body": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            "location": "Amsterdam",
+            "release_date": "2019-11-18",
+            "active": True,
+            "created_at": "2019-11-09T06:37:22.437040Z",
+            "updated_at": "2019-11-10T06:32:22.540832Z"
+        }
+        self.invalid_payload = {
+            'name': '',
+            'age': 4,
+            'breed': 'Pamerion',
+            'color': 'White'
+        }
+
+    def test_valid_update_product(self):
+        response = client.put(
+            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}),
+            data=json.dumps(self.valid_payload),
+            content_type='application/json'
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_update_product(self):
+        response = client.put(
+            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}),
+            data=json.dumps(self.invalid_payload),
+            content_type='application/json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteSingleProductTest(TestCase):
+    """ Test module for deleting an existing product record """
+
+    def setUp(self):
+        self.casper = Product.objects.create(
+            name="casper",
+            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            body="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            location="Amsterdam",
+            release_date="2019-11-18",
+            active=True,
+            created_at="2019-11-09T06:37:22.437040Z",
+            updated_at="2019-11-10T06:32:22.540832Z"
+        )
+        self.muffin = Product.objects.create(
+            name="muffin",
+            description="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            body="Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta",
+            location="Amsterdam",
+            release_date="2019-11-18",
+            active=True,
+            created_at="2019-11-09T06:37:22.437040Z",
+            updated_at="2019-11-10T06:32:22.540832Z"
+        )
+
+    def test_valid_delete_product(self):
+        response = client.delete(
+            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_invalid_delete_product(self):
+        response = client.delete(
+            reverse('get_delete_update_product', kwargs={'pk': 30}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
