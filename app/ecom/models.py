@@ -11,11 +11,11 @@ class Owner(models.Model):
 
 
 class Product(models.Model):
-    owner = models.ForeignKey(Owner,
-                              on_delete=models.CASCADE,
-                              related_name="products",
-                              null=True)
     objects = None
+    # owner = models.ForeignKey(Owner,
+    #                           on_delete=models.CASCADE,
+    #                           related_name="products",
+    #                           null=True)
     name = models.CharField(max_length=120)
     description = models.CharField(max_length=200)
     body = models.TextField()

@@ -50,7 +50,7 @@ class ProductSerializer(serializers.Serializer):
 class OwnerSerializer(serializers.ModelSerializer):
     products = serializers.HyperlinkedRelatedField(many=True,
                                                    read_only=True,
-                                                   view_name="product-detail")
+                                                   view_name="product_detail")
 
     class Meta:
         model = Owner
