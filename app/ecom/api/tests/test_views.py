@@ -36,7 +36,7 @@ class GetAllProductsTest(TestCase):
 
     def test_get_all_products(self):
         # get API response
-        response = client.get(reverse('get_post_products'))
+        response = client.get(reverse('product-list'))
         # get data from db
         products = Product.objects.all()
         serializer = ProductSerializer(products, many=True)
@@ -87,7 +87,7 @@ class GetSingleProductTest(TestCase):
 
     def test_get_valid_single_product(self):
         response = client.get(
-            reverse('get_delete_update_product', kwargs={'pk': self.rambo.pk}))
+            reverse('product-detail', kwargs={'pk': self.rambo.pk}))
         product = Product.objects.get(pk=self.rambo.pk)
         serializer = ProductSerializer(product)
         self.assertEqual(response.data, serializer.data)
@@ -95,7 +95,7 @@ class GetSingleProductTest(TestCase):
 
     def test_get_invalid_single_product(self):
         response = client.get(
-            reverse('get_delete_update_product', kwargs={'pk': 30}))
+            reverse('product-detail', kwargs={'pk': 30}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
 
@@ -122,7 +122,7 @@ class CreateNewProductTest(TestCase):
 
     def test_create_valid_product(self):
         response = client.post(
-            reverse('get_post_products'),
+            reverse('product-list'),
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
@@ -130,7 +130,7 @@ class CreateNewProductTest(TestCase):
 
     def test_create_invalid_product(self):
         response = client.post(
-            reverse('get_post_products'),
+            reverse('product-list'),
             data=json.dumps(self.invalid_payload),
             content_type='application/json'
         )
@@ -180,15 +180,15 @@ class UpdateSingleProductTest(TestCase):
 
     def test_valid_update_product(self):
         response = client.put(
-            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}),
+            reverse('product-detail', kwargs={'pk': self.muffin.pk}),
             data=json.dumps(self.valid_payload),
             content_type='application/json'
         )
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_update_product(self):
         response = client.put(
-            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}),
+            reverse('product-detail', kwargs={'pk': self.muffin.pk}),
             data=json.dumps(self.invalid_payload),
             content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -221,10 +221,10 @@ class DeleteSingleProductTest(TestCase):
 
     def test_valid_delete_product(self):
         response = client.delete(
-            reverse('get_delete_update_product', kwargs={'pk': self.muffin.pk}))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+            reverse('product-detail', kwargs={'pk': self.muffin.pk}))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_invalid_delete_product(self):
         response = client.delete(
-            reverse('get_delete_update_product', kwargs={'pk': 30}))
+            reverse('product-detail', kwargs={'pk': 30}))
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
